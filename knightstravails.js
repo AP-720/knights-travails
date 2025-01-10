@@ -26,20 +26,20 @@ export class KnightsTravails {
 			return false;
 		}
 		// Check if the coordinates are within the valid range (0-7)
-		if (
-			start[0] < 0 ||
-			start[0] > 7 ||
-			start[1] < 0 ||
-			start[1] > 7 ||
-			destination[0] < 0 ||
-			destination[0] > 7 ||
-			destination[1] < 0 ||
-			destination[1] > 7
-		) {
+		if (!this.validatePosition(start) || !this.validatePosition(destination)) {
 			console.log("Coordinates must be between 0 and 7 inclusive.");
 			return false;
 		}
 		// If all checks pass, return true indicating the input is valid
+		return true;
+	}
+	// Helper function to check if the coordinates are within the valid range (0-7)
+	validatePosition(position) {
+		const [x, y] = position;
+
+		if (x < 0 || x > 7 || y < 0 || y > 7) {
+			return false;
+		}
 		return true;
 	}
 
@@ -49,5 +49,34 @@ export class KnightsTravails {
 			distance: distance, // The number of moves taken to get here
 			predecessor: predecessor, // The previous vertex we came from
 		};
+	}
+
+	generateMoves(position) {
+		// Destructure the position into x and y coordinates
+		const [x, y] = position;
+
+		// Initialize an empty array to store valid moves
+		const validMoves = [];
+
+		// Define the 8 possible moves a knight can make
+		const moves = [
+			[x + 2, y + 1],
+			[x + 2, y - 1],
+			[x - 2, y + 1],
+			[x - 2, y - 1],
+			[x + 1, y + 2],
+			[x + 1, y - 2],
+			[x - 1, y + 2],
+			[x - 1, y - 2],
+		];
+
+		// Loop through all the possible moves, validate each move to ensure it stays within the board's boundaries
+		for (const position of moves) {
+			if (this.validatePosition(position)) {
+				validMoves.push(position);
+			}
+		}
+		// Return the array of valid moves
+		return validMoves;
 	}
 }
