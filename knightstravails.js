@@ -42,4 +42,12 @@ export class KnightsTravails {
 		// If all checks pass, return true indicating the input is valid
 		return true;
 	}
+
+	createVertex(position, distance = 0, predecessor = null) {
+		return {
+			position: position, // The position of the vertex on the board
+			distance: distance, // The number of moves taken to get here
+			predecessor: predecessor, // The previous vertex we came from
+		};
+	}
 }
