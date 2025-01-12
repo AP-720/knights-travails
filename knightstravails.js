@@ -43,7 +43,7 @@ export class KnightsTravails {
 		return true;
 	}
 
-	createVertex(position, distance = 0, predecessor = null) {
+	createVertex(position, distance = null, predecessor = null) {
 		return {
 			position: position, // The position of the vertex on the board
 			distance: distance, // The number of moves taken to get here
@@ -78,5 +78,58 @@ export class KnightsTravails {
 		}
 		// Return the array of valid moves
 		return validMoves;
+	}
+
+	bfs(start, destination) {
+		// Initialize an empty queue for BFS traversal.
+		const queue = [];
+
+		// Create an 8x8 grid to track visited positions.
+		// Each cell represents whether a specific position on the board has been visited.
+		const visitedGrid = Array.from({ length: 8 }, () => Array(8).fill(false));
+
+		// Create the starting vertex and mark its distance as 0.
+		const startVertex = this.createVertex(start);
+		startVertex.distance = 0;
+
+		// Mark the starting position as visited in the grid.
+		visitedGrid[start[0]][start[1]] = true;
+
+		// Enqueue the starting vertex to begin BFS traversal.
+		queue.push(startVertex);
+
+		// Begin BFS traversal until the queue is empty.
+		while (queue.length > 0) {
+			// Dequeue the front element for processing.
+			const current = queue.shift();
+
+			// Generate all valid knight moves from the current position.
+			const vertexMoves = this.generateMoves(current.position);
+
+			// Process each potential move.
+			for (const move of vertexMoves) {
+				// Check if the current move matches the destination.
+				if (move[0] === destination[0] && move[1] === destination[1]) {
+					// If destination is found, return the final vertex for reconstruction.
+					return this.reconstructPath(current, move);
+				}
+
+				// If the move has not been visited yet, process it.
+				if (!visitedGrid[move[0]][move[1]]) {
+					// Mark the position as visited in the grid.
+					visitedGrid[move[0]][move[1]] = true;
+
+					// Create a new vertex for this move, setting its distance and predecessor.
+					const newVertex = this.createVertex(
+						move,
+						current.distance + 1,
+						current
+					);
+
+					// Enqueue the new vertex for further processing.
+					queue.push(newVertex);
+				}
+			}
+		}
 	}
 }
