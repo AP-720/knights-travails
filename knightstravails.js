@@ -111,7 +111,12 @@ export class KnightsTravails {
 				// Check if the current move matches the destination.
 				if (move[0] === destination[0] && move[1] === destination[1]) {
 					// If destination is found, return the final vertex for reconstruction.
-					return this.reconstructPath(current, move);
+					const endVertex = this.createVertex(
+						move,
+						current.distance + 1,
+						current
+					);
+					return endVertex
 				}
 
 				// If the move has not been visited yet, process it.
@@ -131,5 +136,17 @@ export class KnightsTravails {
 				}
 			}
 		}
+	}
+
+	reconstructPath(endVertex) {
+		const path = [];
+
+		let vertex = endVertex;
+
+		while (vertex) {
+			path.unshift(vertex.position);
+			vertex = vertex.predecessor;
+		}
+		return path;
 	}
 }
