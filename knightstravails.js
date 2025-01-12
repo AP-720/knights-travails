@@ -116,7 +116,7 @@ export class KnightsTravails {
 						current.distance + 1,
 						current
 					);
-					return endVertex
+					return endVertex;
 				}
 
 				// If the move has not been visited yet, process it.
@@ -139,14 +139,47 @@ export class KnightsTravails {
 	}
 
 	reconstructPath(endVertex) {
+		// Initialize an empty array to store the path.
 		const path = [];
 
+		// Start from the destination vertex and traverse backward.
 		let vertex = endVertex;
 
+		// Continue until there are no more predecessors (i.e., reach the start).
 		while (vertex) {
+			// Add the current vertex's position to the beginning of the path array.
 			path.unshift(vertex.position);
+
+			// Move to the predecessor of the current vertex.
 			vertex = vertex.predecessor;
 		}
+
+		// Return the path array, which now contains positions from start to destination.
 		return path;
+	}
+
+	// Driver function for whole process
+	knightMoves(start, destination) {
+		let endVertex;
+
+		// Validate the inputs for correctness.
+		if (!this.validateInput(start, destination)) {
+			return;
+		}
+
+		// Handle the edge case where start and destination are the same.
+		if (start[0] === destination[0] && start[1] === destination[1]) {
+			endVertex = this.createVertex(destination);
+		} else {
+			// Perform BFS to find the shortest path to the destination.
+			endVertex = this.bfs(start, destination);
+		}
+
+		// Reconstruct the path from the end vertex.
+		const path = this.reconstructPath(endVertex);
+
+		// Output the result in a user-friendly format.
+		console.log(`You made it in ${path.length - 1} moves! Here's your path:`);
+		path.forEach((position) => console.log(position));
 	}
 }
